@@ -51,32 +51,30 @@ const Camera = () => {
   const videoRef = useRef(null);
   const photoRef = useRef(null);
   const [hasPhoto, setHasPhoto] = useState(false);
-  const [facingMode, setFacingMode] = useState("environment"); // Default to back camera
 
+  
   const getVideo = () => {
     // Kiểm tra xem truy cập vào camera đã được phép hay không
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       // Yêu cầu truy cập vào camera với constraints mong muốn
-      navigator.mediaDevices
-        .getUserMedia({
-          video: {
-            width: 1280,
-            height: 720,
-            facingMode: facingMode // Chọn camera trước hoặc sau
-          },
-        })
-        .then((stream) => {
-          let video = videoRef.current as HTMLVideoElement | null; 
-          if (video) {
-            video.srcObject = stream;
-            video.play();
-          } else {
-            console.error("Video element not found.");
-          }
-        })
-        .catch((err) => {
-          console.error("Error accessing camera:", err);
-        });
+      navigator.mediaDevices.getUserMedia({ 
+        video: { 
+          width: 1280, 
+          height: 720 
+        } 
+      })
+      .then((stream) => {
+        let video = videoRef.current as HTMLVideoElement | null; 
+        if (video) {
+          video.srcObject = stream;
+          video.play();
+        } else {
+          console.error("Video element not found.");
+        }
+      })
+      .catch((err) => {
+        console.error("Error accessing camera:", err);
+      });
     } else {
       console.error("getUserMedia is not supported by this browser");
     }
@@ -84,56 +82,50 @@ const Camera = () => {
 
   const takePhoto = () => {
     const width = 414;
-    const height = width / (16 / 9);
+    const height = width / (16/9);
 
     let video = videoRef.current;
     let photo = photoRef.current as HTMLCanvasElement | null;
 
     if (photo) {
-      photo.width = width;
-      photo.height = height;
+        photo.width = width;
+        photo.height = height;
 
-      let ctx = photo.getContext("2d");
+        let ctx = photo.getContext('2d');
 
-      if (ctx) {
-        if (video) {
-          ctx.drawImage(video, 0, 0, width, height);
-          setHasPhoto(true);
+        if (ctx) {
+            if (video) {
+                ctx.drawImage(video, 0, 0, width, height);
+                setHasPhoto(true);
+            } else {
+                console.error("videoRef.current is null");
+            }
         } else {
-          console.error("videoRef.current is null");
+            console.error("Failed to get 2D context for photo canvas");
         }
-      } else {
-        console.error("Failed to get 2D context for photo canvas");
-      }
     } else {
-      console.error("photoRef.current is null");
+        console.error("photoRef.current is null");
     }
-  };
+}
 
-  const closePhoto = () =>{
-    let photo = photoRef.current as HTMLCanvasElement | null;
-   if(photo){
-    let ctx = photo.getContext('2d');
-    ctx?.clearRect(0, 0, photo.width, photo.height);
-   }
-    setHasPhoto(false)
-  }
+const closePhoto = () =>{
+  let photo = photoRef.current as HTMLCanvasElement | null;
+ if(photo){
+  let ctx = photo.getContext('2d');
 
-  const switchCamera = () => {
-    setFacingMode(facingMode === "user" ? "environment" : "user"); // Toggle between front and back camera
-    setHasPhoto(false); // Reset photo state when switching cameras
-  };
-
-  useEffect(() => {
-    getVideo();
-  }, [facingMode]);
-
+  ctx?.clearRect(0, 0, photo.width, photo.height);
+ }
+  setHasPhoto(false)
+}
+  useEffect(()=>{
+    getVideo()
+  },[videoRef])
   return (
     <div className="container">
       <div className="camera">
         <video ref={videoRef}></video>
+
         <button onClick={takePhoto}>SNAP</button>
-        <button onClick={switchCamera}>SWITCH CAMERA</button>
       </div>
       <div className={"result " + (hasPhoto ? "hasPhoto" : "")}>
         <canvas ref={photoRef}></canvas>
