@@ -132,7 +132,7 @@ const Camera = () => {
 
   return (
     <div className="container">
-      <div className="camera">
+      <div className="camera mt-48">
         <video ref={videoRef}></video>
         <button onClick={takePhoto}>SNAP</button>
         <label onClick={switchCamera} className="text-white">SWITCH CAMERA</label>
