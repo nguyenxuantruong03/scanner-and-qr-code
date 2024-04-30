@@ -61,12 +61,6 @@ body {
   height: auto;
 }
 
-@media only screen and (max-width: 768px) {
-  .video {
-    max-width: none;
-  }
-}
-
 button {
   position : absolute;
   bottom: 20px;

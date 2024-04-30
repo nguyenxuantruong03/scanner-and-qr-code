@@ -68,7 +68,11 @@ const Camera = () => {
         .then((stream) => {
           let video = videoRef.current as HTMLVideoElement | null; 
           if (video) {
+            // Thiết lập thuộc tính của video element
             video.srcObject = stream;
+            video.autoplay = true; // Auto play video
+            video.muted = true; // Tắt tiếng để tránh tiếng vang
+            video.playsInline = true; // Chơi video trong khung của trang
             video.play();
           } else {
             console.error("Video element not found.");
@@ -132,7 +136,7 @@ const Camera = () => {
 
   return (
     <div className="container">
-      <div className="camera mt-48">
+      <div className="camera">
         <video ref={videoRef}></video>
         <button onClick={takePhoto}>SNAP</button>
         <label onClick={switchCamera} className="text-white">SWITCH CAMERA</label>
