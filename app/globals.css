@@ -61,6 +61,14 @@ body {
   height: auto;
 }
 
+video::-webkit-media-controls-panel {
+  display: none !important;
+  opacity: 1 !important;}
+
+  video::-webkit-media-controls-start-playback-button {
+    display: none;
+}
+
 button {
   position : absolute;
   bottom: 20px;
